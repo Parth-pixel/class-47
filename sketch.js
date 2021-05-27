@@ -11,8 +11,8 @@ var gameState = "intro";
 var tile1image,tile2image,tile3image,tile4image,tile5image;
 var hurdle;
 var introImage;
-
-
+var enemyKilled = 0;
+var Bonuscoins = 0;
 
 function preload(){
  bg = loadImage("images/farm2.png");
@@ -66,11 +66,23 @@ function draw() {
   if(gameState === "intro"){
     background(introImage);
     console.log("Hello....")
+    textSize(30);
     fill("black");
-    text("Hello Everyone..",50,50)
-    text("These villagers are suffering from poverty and need money.",100,100);
-    text("Please help them in collecting some money. Let's go. Press Enter to play",150,150);
-    text("Press Enter to play",200,200);
+    text("Hello Everyone..",300,50)
+    text("These villagers are suffering from poverty and need money.",300,90);
+    text("Please help them in collecting some money. Let's go.",300,130);
+    push()
+    fill("red");
+    text("1 coin = 10000rs..",300,170)
+    pop()
+     text("If you touch the enemy, it will be killed and you get 1 bonus coin = 1000rs..",300,210);
+     text("Try to kill as many enemy as you can",300,250);
+     push()
+     textSize(40);
+     fill("blue");
+    text("Press Enter to play",300,350);
+    pop()
+   
     if(keyDown("enter")){
       gameState = "start";
     }
@@ -84,8 +96,8 @@ function draw() {
     spawnObstacles();
   text("Save Your Village",100,100);
 //background("white");
-ground.velocityX= -(3+score/100);
-ground2.velocityX = -(3+score/100);
+ground.velocityX= -(3+score/4);
+ground2.velocityX = -(3+score/4);
 
 if(ground.x<0){
   ground.x = 1100;
@@ -125,16 +137,35 @@ for(var i=0;i<moneyGroup.length;i++){
         // hurdleGroup.get(i).destroy();
           }
          }
+         for(var i=0;i<enemyGroup.length;i++){ 
+          if(enemyGroup.get(i).collide(farmer1)){
+            enemyGroup.get(i).destroy();
+            enemyKilled = enemyKilled+1;
+            Bonuscoins = Bonuscoins+1;
+              }
+             }
 //farmer1.collide(ground);
 
 farmer1.collide(invisibleGround);
 farmer1.collide(hurdleGroup);
-
+if(score === 20){
+  gameState = "end";
+}
 drawSprites();
 textSize(30);
 textFont("Comic Sans MS");
 fill("black");
 text("Coins Collected: "+score,50,50);
+text("Enemy Killed: "+enemyKilled,1200,50);
+text("Bonus Coins: "+Bonuscoins,600,50);
+  }
+  if(gameState === "end"){
+    background("black");
+    fill("white");
+    textSize(50);
+    textFont("Comic Sans MS");
+    fill("white");
+    text("Congrats! You have successfully removed poverty from your village",150,325);
   }
 }
 
